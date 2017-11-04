@@ -1,0 +1,3 @@
+CFLAGS += -O3
+DIR_BUILD = $(DIR_BASE)/release
+DO_STRIP = 1
