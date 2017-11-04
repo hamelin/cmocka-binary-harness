@@ -1,14 +1,13 @@
 DIR_BASE = build
-MODULES_COMMON = hello
-MODULES_RUNCTESTS = $(MODULES_COMMON) \
-					runctests
-MODULES_LIBCTESTS = $(MODULES_COMMON)
+MODULES_LIBCTESTS = hello
+MODULES_RUNCTESTS = runctests
 
-CC = gcc -c -x c
+CC = gcc -c -x c -static
 CFLAGS = -std=c11 -Wall -Werror
-LD = gcc
+LD = gcc -static
 LDFLAGS =
 LIBS = -lm
+CCLD = gcc -static
 AR = ar
 ifdef CONFIG
 	include $(CONFIG).mak
@@ -21,9 +20,8 @@ TARGET_RUNCTESTS = $(call BUILDIZE,runctests)
 TARGET_LIBCTESTS = $(call BUILDIZE,libctests.a)
 
 OBJECTIZE = $(call BUILDIZE,$(addsuffix .o,$(1)))
-OBJECTS_COMMON = $(call OBJECTIZE,$(MODULES_COMMON))
-OBJECTS_RUNCTESTS = $(OBJECTS_COMMON) $(call OBJECTIZE,$(MODULES_RUNCTESTS))
-OBJECTS_LIBCTESTS = $(OBJECTS_COMMON) $(call OBJECTIZE,$(MODULES_LIBCTESTS))
+OBJECTS_RUNCTESTS = $(call OBJECTIZE,$(MODULES_RUNCTESTS))
+OBJECTS_LIBCTESTS = $(call OBJECTIZE,$(MODULES_LIBCTESTS))
 
 
 .PHONY: buildall
@@ -64,6 +62,11 @@ $(TARGET_LIBCTESTS): $(OBJECTS_LIBCTESTS)
 
 $(call OBJECTIZE,%): %.c
 	$(CC) -o $@ $(CFLAGS) $<
+
+$(call BUILDIZE,%): proto/%.c
+	$(CCLD) -o $@ $(CFLAGS) $(LDFLAGS) $< $(LIBS)
+
+$(call BUILDIZE,%.so): proto/%.c
 
 
 # EOF
