@@ -1,7 +1,12 @@
-char*
+#include <stdlib.h>
+
+
+const char* str_array[] = { "Hello world!", "HOHO", NULL };
+
+const char*
 hello()
 {
-    return "Hello world!";
+    return str_array[ 0 ];
 }
 
 
