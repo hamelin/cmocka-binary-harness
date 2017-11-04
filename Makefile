@@ -1,9 +1,10 @@
 DIR_BASE = build
+DIR_SRC = src
 MODULES_LIBCTESTS = hello
 MODULES_RUNCTESTS = runctests
 
 CC = gcc -c -x c -static
-CFLAGS = -std=c11 -Wall -Werror
+CFLAGS = -std=c11 -Wall -Werror -Iinclude
 LD = gcc -static
 LDFLAGS =
 LIBS = -lm
@@ -22,6 +23,8 @@ TARGET_LIBCTESTS = $(call BUILDIZE,libctests.a)
 OBJECTIZE = $(call BUILDIZE,$(addsuffix .o,$(1)))
 OBJECTS_RUNCTESTS = $(call OBJECTIZE,$(MODULES_RUNCTESTS))
 OBJECTS_LIBCTESTS = $(call OBJECTIZE,$(MODULES_LIBCTESTS))
+
+SRCIZE = $(addprefix $(DIR_SRC)/,$(1))
 
 
 .PHONY: buildall
@@ -60,7 +63,7 @@ $(TARGET_LIBCTESTS): $(OBJECTS_LIBCTESTS)
 	$(AR) cr $@ $?
 	ranlib $@
 
-$(call OBJECTIZE,%): %.c
+$(call OBJECTIZE,%): $(call SRCIZE,%.c)
 	$(CC) -o $@ $(CFLAGS) $<
 
 
