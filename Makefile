@@ -11,7 +11,9 @@ LDFLAGS =
 LIBS = -lm
 AR = ar
 ifdef CONFIG
-	include $(CONFIG)
+	include $(CONFIG).mak
+else
+	include debug.mak
 endif
 
 BUILDIZE = $(addprefix $(DIR_BUILD)/,$(1))
@@ -26,14 +28,29 @@ OBJECTS_LIBCTESTS = $(OBJECTS_COMMON) $(call OBJECTIZE,$(MODULES_LIBCTESTS))
 
 .PHONY: buildall
 buildall:
-	$(MAKE) buildconfig CONFIG=debug.mak
-	$(MAKE) buildconfig CONFIG=release.mak
+	$(MAKE) buildconfig CONFIG=debug
+	$(MAKE) buildconfig CONFIG=release
 
 .PHONY: buildconfig
 buildconfig:
-	@echo ==== Config: $(subst .mak,,$(CONFIG)) ====
+	@echo ==== Config: $(CONFIG) ====
 	mkdir -p $(DIR_BUILD)
 	$(MAKE) $(TARGET_RUNCTESTS) $(TARGET_LIBCTESTS)
+
+.PHONY: clean
+clean:
+	rm -rf $(DIR_BASE)
+
+.PHONY: run
+run:
+	$(MAKE)
+	$(TARGET_RUNCTESTS) $(ARGS) ; echo Exit code: $$?
+
+.PHONY: debug
+debug:
+	$(MAKE)
+	gdb $(TARGET_RUNCTESTS)
+
 
 $(TARGET_RUNCTESTS): $(OBJECTS_RUNCTESTS) $(TARGET_LIBCTESTS)
 	$(LD) -o $@ $(LDFLAGS) $? $(LIBS)
@@ -48,8 +65,5 @@ $(TARGET_LIBCTESTS): $(OBJECTS_LIBCTESTS)
 $(call OBJECTIZE,%): %.c
 	$(CC) -o $@ $(CFLAGS) $<
 
-.PHONY: clean
-clean:
-	rm -rf $(DIR_BASE)
 
 # EOF
