@@ -1,8 +1,3 @@
-DIR_BASE = build
-DIR_SRC = src
-MODULES_LIBCTESTS = hello
-MODULES_RUNCTESTS = runctests
-
 CC = gcc -c -x c -static
 CFLAGS = -std=c11 -Wall -Werror -Iinclude
 LD = gcc -static
@@ -16,16 +11,28 @@ else
 	include debug.mak
 endif
 
-BUILDIZE = $(addprefix $(DIR_BUILD)/,$(1))
-TARGET_RUNCTESTS = $(call BUILDIZE,runctests)
-TARGET_LIBCTESTS = $(call BUILDIZE,libctests.a)
+DIR_BASE = build
+DIR_SRC = src
+DIR_TEST = test
+IN_BUILD = $(addprefix $(DIR_BUILD)/,$(1))
+AS_TEST = $(addprefix $(DIR_TEST)/,$(1))
+PREPOST = $(addprefix $(2),$(addsuffix $(3),$(1)))
+AS_SRC = $(call PREPOST,$(1),$(DIR_SRC)/,.c)
+AS_OBJ = $(call PREPOST,$(1),$(DIR_BUILD)/,.o)
+AS_TMP_SRC = $(call PREPOST,$(1),$(DIR_BUILD)/,.c)
 
-OBJECTIZE = $(call BUILDIZE,$(addsuffix .o,$(1)))
-OBJECTS_RUNCTESTS = $(call OBJECTIZE,$(MODULES_RUNCTESTS))
-OBJECTS_LIBCTESTS = $(call OBJECTIZE,$(MODULES_LIBCTESTS))
+FROM_SRC = $(subst .c,,$(subst $(DIR_SRC)/,,$(wildcard $(call AS_SRC,$(1)))))
+MODULES = $(call FROM_SRC,*)
+MKCTEST = $(call IN_BUILD,mkctest)
+RUNCTESTS = $(call IN_BUILD,runctests)
+LIBCTESTS = $(call IN_BUILD,libctests.a)
+TESTMODS = $(call FROM_SRC,$(call AS_TEST,*))
+TESTS = $(call IN_BUILD,$(TESTMODS))
 
-SRCIZE = $(addprefix $(DIR_SRC)/,$(1))
+OBJECTS = $(call AS_OBJ,$(MODULES))
 
+
+.SECONDARY:
 
 .PHONY: buildall
 buildall:
@@ -35,8 +42,8 @@ buildall:
 .PHONY: buildconfig
 buildconfig:
 	@echo ==== Config: $(CONFIG) ====
-	mkdir -p $(DIR_BUILD)
-	$(MAKE) $(TARGET_RUNCTESTS) $(TARGET_LIBCTESTS)
+	mkdir -p $(DIR_BUILD)/$(DIR_TEST) $(DIR_BUILD)/main
+	$(MAKE) $(RUNCTESTS) $(LIBCTESTS) $(TESTS)
 
 .PHONY: clean
 clean:
@@ -45,26 +52,30 @@ clean:
 .PHONY: run
 run:
 	$(MAKE)
-	$(TARGET_RUNCTESTS) $(ARGS) ; echo Exit code: $$?
+	./$(RUNCTESTS) $(ARGS) ; echo Exit code: $$?
 
 .PHONY: debug
 debug:
 	$(MAKE)
-	gdb $(TARGET_RUNCTESTS)
+	gdb $(RUNCTESTS)
 
 
-$(TARGET_RUNCTESTS): $(OBJECTS_RUNCTESTS) $(TARGET_LIBCTESTS)
+$(RUNCTESTS): $(call AS_OBJ,main/runctests) $(LIBCTESTS)
 	$(LD) -o $@ $(LDFLAGS) $? $(LIBS)
 ifdef DO_STRIP
 	strip $@
 endif
 
-$(TARGET_LIBCTESTS): $(OBJECTS_LIBCTESTS)
+$(LIBCTESTS): $(OBJECTS)
 	$(AR) cr $@ $?
 	ranlib $@
 
-$(call OBJECTIZE,%): $(call SRCIZE,%.c)
+$(call AS_OBJ,%): $(call AS_SRC,%)
 	$(CC) -o $@ $(CFLAGS) $<
+
+$(call IN_BUILD,$(call AS_TEST,%)): $(call AS_OBJ,$(call AS_TEST,%)) $(LIBCTESTS)
+	@echo $<
+	touch $@
 
 
 # EOF
