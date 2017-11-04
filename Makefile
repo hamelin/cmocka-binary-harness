@@ -63,10 +63,5 @@ $(TARGET_LIBCTESTS): $(OBJECTS_LIBCTESTS)
 $(call OBJECTIZE,%): %.c
 	$(CC) -o $@ $(CFLAGS) $<
 
-$(call BUILDIZE,%): proto/%.c
-	$(CCLD) -o $@ $(CFLAGS) $(LDFLAGS) $< $(LIBS)
-
-$(call BUILDIZE,%.so): proto/%.c
-
 
 # EOF
