@@ -1,8 +1,8 @@
 CC = gcc -c -x c
-CFLAGS = -std=c11 -Wall -Werror -Iinclude
+CFLAGS = -std=c11 -Wall -Werror -Iinclude -include header.h
 LD = gcc -static
 LDFLAGS =
-LIBS = -lm
+LIBS = -lcmp -lm
 CCLD = gcc -static
 AR = ar
 ifdef CONFIG
