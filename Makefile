@@ -20,9 +20,9 @@ AS_TEST = $(addprefix $(DIR_TEST)/,$(1))
 PREPOST = $(addprefix $(2),$(addsuffix $(3),$(1)))
 AS_SRC = $(call PREPOST,$(1),$(DIR_SRC)/,.c)
 AS_OBJ = $(call PREPOST,$(1),$(DIR_BUILD)/,.o)
-AS_TMP_SRC = $(call PREPOST,$(1),$(DIR_BUILD)/,.c)
 
 FROM_SRC = $(subst .c,,$(subst $(DIR_SRC)/,,$(wildcard $(call AS_SRC,$(1)))))
+HEADERS = $(wildcard include/*.h)
 MODULES = $(call FROM_SRC,*)
 OBJECTS = $(call AS_OBJ,$(MODULES))
 LIBCMOCKA_ELF = $(call IN_BUILD,libcmocka_elf.a)
@@ -30,7 +30,7 @@ MAINS = $(call FROM_SRC,$(call AS_EXEC,*))
 EXECS = $(call IN_BUILD,$(MAINS))
 TESTMODS = $(call FROM_SRC,$(call AS_TEST,*))
 TESTOBJS = $(call AS_OBJ,$(TESTMODS))
-LIBTEST = $(call IN_BUILD,libunittests.a)
+LIBTEST = $(call IN_BUILD,libtest.a)
 
 
 .SECONDARY:
@@ -70,8 +70,6 @@ endif
 $(call IN_BUILD,$(call AS_EXEC,runtests)): $(LIBTEST)
 $(call IN_BUILD,$(call AS_EXEC,runtests)): LIBS := $(LIBTEST) -lcmocka $(LIBS)
 
-$(call AS_OBJ,%): $(call AS_SRC,%)
+$(call AS_OBJ,%): $(call AS_SRC,%) $(HEADERS)
 	$(CC) -o $@ $(CFLAGS) $<
 
-
-# EOF
