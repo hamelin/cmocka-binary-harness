@@ -2,7 +2,7 @@ CC = gcc -c -x c
 CFLAGS = -std=c11 -Wall -Werror -Iinclude -include header.h
 LD = gcc -static
 LDFLAGS =
-LIBS = -lcmp -lm
+LIBS = -lm
 CCLD = gcc -static
 AR = ar
 ifdef CONFIG
@@ -25,12 +25,12 @@ AS_TMP_SRC = $(call PREPOST,$(1),$(DIR_BUILD)/,.c)
 FROM_SRC = $(subst .c,,$(subst $(DIR_SRC)/,,$(wildcard $(call AS_SRC,$(1)))))
 MODULES = $(call FROM_SRC,*)
 OBJECTS = $(call AS_OBJ,$(MODULES))
-LIBCTESTS = $(call IN_BUILD,libctests.a)
+LIBCMOCKA_ELF = $(call IN_BUILD,libcmocka_elf.a)
 MAINS = $(call FROM_SRC,$(call AS_EXEC,*))
 EXECS = $(call IN_BUILD,$(MAINS))
 TESTMODS = $(call FROM_SRC,$(call AS_TEST,*))
-TESTS = $(call IN_BUILD,$(TESTMODS))
-
+TESTOBJS = $(call AS_OBJ,$(TESTMODS))
+LIBTEST = $(call IN_BUILD,libunittests.a)
 
 
 .SECONDARY:
@@ -51,19 +51,24 @@ clean:
 	rm -rf $(DIR_BASE)
 
 
-$(LIBCTESTS): $(OBJECTS)
+$(LIBCMOCKA_ELF): $(OBJECTS)
 	$(AR) cr $@ $?
 	ranlib $@
 
-$(EXECS) $(TESTS): $(LIBCTESTS)
+$(LIBTEST): $(TESTOBJS) $(LIBCMOCKA_ELF)
+	$(AR) cr $@ $(TESTOBJS)
+	ranlib $@
+
+$(EXECS): $(LIBCMOCKA_ELF)
 
 $(call IN_BUILD,%): $(call AS_OBJ,%)
-	$(LD) -o $@ $(LDFLAGS) $< \
-		$(and $(filter $(call IN_BUILD,$(call AS_TEST,%)),$@),$(LIBCTESTS)) \
-		$(LIBS)
+	$(LD) -o $@ $(LDFLAGS) $< $(LIBS)
 ifdef DO_STRIP
 	strip $@
 endif
+
+$(call IN_BUILD,$(call AS_EXEC,runtests)): $(LIBTEST)
+$(call IN_BUILD,$(call AS_EXEC,runtests)): LIBS := $(LIBTEST) -lcmocka $(LIBS)
 
 $(call AS_OBJ,%): $(call AS_SRC,%)
 	$(CC) -o $@ $(CFLAGS) $<
