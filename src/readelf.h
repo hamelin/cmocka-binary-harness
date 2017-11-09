@@ -11,7 +11,7 @@ typedef struct _test_case
 
 #define TEST_CASE( name_test, name_case, name_fn )   { (name_test), (name_case), (name_fn) }
 #define TEST_CASE_NIL                                TEST_CASE( NULL, NULL, NULL )
-test_case* test_case_make();
+test_case* test_case_alloc();
 void test_case_free( test_case** tc );
 #define test_case_get_test( tc )      (tc)->_test
 #define test_case_get_case( tc )      (tc)->_case

@@ -7,7 +7,7 @@ static test_case* tc = NULL;
 
 int readelf_setup( void** state )
 {
-    tc = test_case_make();
+    tc = test_case_alloc();
     return 0;
 }
 

@@ -1,7 +1,7 @@
 #include "readelf.h"
 
 
-test_case* test_case_make()
+test_case* test_case_alloc()
 {
     test_case* tc = calloc( 1, sizeof( test_case ) );
     memset( tc, 0, sizeof( test_case ) );
