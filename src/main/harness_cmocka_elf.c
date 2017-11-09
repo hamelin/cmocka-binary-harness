@@ -1,7 +1,9 @@
 int
 main( int argc, char** argv )
 {
-    abort();
+    // Gather stuff from piping readelf
+    // Build an array of tests
+    // Convert it to source
     return 0;
 }
 

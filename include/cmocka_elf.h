@@ -7,9 +7,9 @@
 
 #include <stdlib.h>
 
-#define SETUP()     void setup_cmocka__##TEST_NAME( void* state )
-#define TEARDOWN()  void teardown_cmocka__##TEST_NAME( void* state )
-#define TEST(name)  void test_cmocka__##TEST_NAME##__##name( void* state )
+#define SETUP()     int setup_cmocka__##TEST_NAME( void** state )
+#define TEARDOWN()  int teardown_cmocka__##TEST_NAME( void** state )
+#define TEST(name)  void test_cmocka__##TEST_NAME##__##name( void** state )
 
 extern void* ptr_freed_last;
 
