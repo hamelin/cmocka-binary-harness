@@ -17,6 +17,9 @@ void test_test_case_parse_symbol_valid_test( void** state );
 void test_test_case_parse_symbol_bad_test_case_sep( void** state );
 void test_test_case_parse_symbol_bad_prefix_sep( void** state );
 void test_test_case_parse_symbol_other( void** state );
+void test_test_case_parse_symbol_no_test_case( void** state );
+void test_test_case_parse_symbol_no_test( void** state );
+void test_test_case_parse_symbol_no_case( void** state );
 void test_parse_readelf_line_with_test( void** state );
 void test_parse_readelf_line_func_setup( void** state );
 void test_parse_readelf_line_func_teardown( void** state );
@@ -30,6 +33,7 @@ void test_fixture_parse_symbol_has_setup( void** state );
 void test_fixture_parse_symbol_has_teardown( void** state );
 void test_fixture_parse_symbol_bad_sep( void** state );
 void test_fixture_parse_symbol_other( void** state );
+void test_fixture_parse_symbol_no_test( void** state );
 
 const struct CMUnitTest all_tests[] =
 {
@@ -47,6 +51,9 @@ const struct CMUnitTest all_tests[] =
     cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_bad_test_case_sep, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_bad_prefix_sep, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_other, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_test_case, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_test, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_case, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_test, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_func_setup, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_func_teardown, readelf_setup, readelf_teardown ),
@@ -60,5 +67,6 @@ const struct CMUnitTest all_tests[] =
     cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_has_teardown, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_bad_sep, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_other, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_no_test, readelf_setup, readelf_teardown ),
 };
 const int num_tests = sizeof( all_tests ) / sizeof( all_tests[ 0 ] );

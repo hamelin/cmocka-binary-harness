@@ -25,6 +25,7 @@ void test_case_free( test_case** tc )
 
 int test_case_parse_symbol( test_case** ptc, const char* symbol )
 {
+    int r = RESULT_PARSE_SYMBOL_ERROR;
     const char* prefix = "test_cmocka__";
     const char* sep_test_from_case = "__";
     if( !strncmp( symbol, prefix, strlen( prefix ) ) )
@@ -35,24 +36,34 @@ int test_case_parse_symbol( test_case** ptc, const char* symbol )
         {
             char* testname = strdup( test_and_case );
             testname[ sep - test_and_case ] = '\0';
+            const char* casename = sep + strlen( sep_test_from_case );
 
-            *ptc = test_case_alloc();
-            test_case_set_fn( *ptc, symbol );
-            test_case_set_test( *ptc, testname );
-            test_case_set_case( *ptc, sep + strlen( sep_test_from_case ) );
+            if( testname[ 0 ] && casename[ 0 ] )
+            {
+                *ptc = test_case_alloc();
+                test_case_set_fn( *ptc, symbol );
+                test_case_set_test( *ptc, testname );
+                test_case_set_case( *ptc, sep + strlen( sep_test_from_case ) );
+                r = RESULT_PARSE_SYMBOL_SUCCESS;
+            }
+            else
+            {
+                r = RESULT_PARSE_SYMBOL_FAILURE;
+            }
 
             free( testname );
-            return RESULT_PARSE_SYMBOL_SUCCESS;
         }
         else
         {
-            return RESULT_PARSE_SYMBOL_FAILURE;
+            r = RESULT_PARSE_SYMBOL_FAILURE;
         }
     }
     else
     {
-        return RESULT_PARSE_SYMBOL_FAILURE;
+        r = RESULT_PARSE_SYMBOL_FAILURE;
     }
+
+    return r;
 }
 
 

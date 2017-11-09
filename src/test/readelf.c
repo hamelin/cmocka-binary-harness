@@ -75,6 +75,36 @@ void test_test_case_parse_symbol_other( void** state )
 }
 
 
+void test_test_case_parse_symbol_no_test_case( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_FAILURE,
+            test_case_parse_symbol( &tc, "test_cmocka__" )
+            );
+    assert_null( tc );
+}
+
+
+void test_test_case_parse_symbol_no_test( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_FAILURE,
+            test_case_parse_symbol( &tc, "test_cmocka____case" )
+            );
+    assert_null( tc );
+}
+
+
+void test_test_case_parse_symbol_no_case( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_FAILURE,
+            test_case_parse_symbol( &tc, "test_cmocka__TEST__" )
+            );
+    assert_null( tc );
+}
+
+
 void test_parse_readelf_line_with_test( void** state )
 {
     assert_int_equal(
@@ -214,6 +244,21 @@ void test_fixture_parse_symbol_other( void** state )
     assert_int_equal(
             RESULT_PARSE_SYMBOL_FAILURE,
             test_fixture_parse_symbol( &tf, "__whatever" )
+            );
+    assert_null( tf );
+}
+
+
+void test_fixture_parse_symbol_no_test( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_FAILURE,
+            test_fixture_parse_symbol( &tf, "setup_cmocka__" )
+            );
+    assert_null( tf );
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_FAILURE,
+            test_fixture_parse_symbol( &tf, "teardown_cmocka__" )
             );
     assert_null( tf );
 }
