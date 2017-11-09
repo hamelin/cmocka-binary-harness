@@ -54,8 +54,7 @@ int test_fixture_parse_symbol( test_fixture** ptf, const char* symbol );
 
 #define RESULT_PARSE_READELF_LINE_FAILURE             0
 #define RESULT_PARSE_READELF_LINE_SUCCESS_TEST_CASE   1
-#define RESULT_PARSE_READELF_LINE_SUCCESS_SETUP       2
-#define RESULT_PARSE_READELF_LINE_SUCCESS_TEARDOWN    3
+#define RESULT_PARSE_READELF_LINE_SUCCESS_FIXTURE     2
 #define RESULT_PARSE_READELF_LINE_ERROR              -1
 int parse_readelf_line( void** ptobj, const char* line_readelf );
 

@@ -35,6 +35,14 @@ void assert_test_case_equal(
 }
 
 
+void check_test_fixture( const char* t, fixture_type ft, const char* f )
+{
+    assert_string_equal( t, test_fixture_get_test( tf ) );
+    assert_int_equal( ft, test_fixture_get_type( tf ) );
+    assert_string_equal( f, test_fixture_get_fn( tf ) );
+}
+
+
 void test_test_case_parse_symbol_valid_test( void** state )
 {
     assert_int_equal(
@@ -118,6 +126,32 @@ void test_parse_readelf_line_with_test( void** state )
 }
 
 
+void test_parse_readelf_line_with_setup( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_READELF_LINE_SUCCESS_FIXTURE,
+            parse_readelf_line(
+                (void**)&tf,
+                "    17: 0000000000000000    25 FUNC    GLOBAL DEFAULT    1 setup_cmocka__NAME\n"
+                )
+            );
+    check_test_fixture( "NAME", FIXTURE_SETUP, "setup_cmocka__NAME" );
+}
+
+
+void test_parse_readelf_line_with_teardown( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_READELF_LINE_SUCCESS_FIXTURE,
+            parse_readelf_line(
+                (void**)&tf,
+                "    20: 0000000000000000    23 FUNC    GLOBAL DEFAULT    1 teardown_cmocka__NAME\n"
+                )
+            );
+    check_test_fixture( "NAME", FIXTURE_TEARDOWN, "teardown_cmocka__NAME" );
+}
+
+
 void check_parse_failure( const char* readelf_line )
 {
     assert_int_equal(
@@ -125,22 +159,6 @@ void check_parse_failure( const char* readelf_line )
             parse_readelf_line( (void**)&tc, readelf_line )
             );
     assert_null( tc );
-}
-
-
-void test_parse_readelf_line_func_setup( void** state )
-{
-    check_parse_failure(
-            "    17: 0000000000000000    25 FUNC    GLOBAL DEFAULT    1 setup_cmocka__NAME\n"
-            );
-}
-
-
-void test_parse_readelf_line_func_teardown( void** state )
-{
-    check_parse_failure(
-            "    20: 0000000000000000    23 FUNC    GLOBAL DEFAULT    1 teardown_cmocka__NAME\n"
-            );
 }
 
 
@@ -193,14 +211,6 @@ void test_parse_readelf_line_symbol_table_summary( void** state )
     check_parse_failure(
             "Symbol table '.symtab' contains 47 entries:\n"
             );
-}
-
-
-void check_test_fixture( const char* t, fixture_type ft, const char* f )
-{
-    assert_string_equal( t, test_fixture_get_test( tf ) );
-    assert_int_equal( ft, test_fixture_get_type( tf ) );
-    assert_string_equal( f, test_fixture_get_fn( tf ) );
 }
 
 

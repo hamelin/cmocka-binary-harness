@@ -21,6 +21,8 @@ void test_test_case_parse_symbol_no_test_case( void** state );
 void test_test_case_parse_symbol_no_test( void** state );
 void test_test_case_parse_symbol_no_case( void** state );
 void test_parse_readelf_line_with_test( void** state );
+void test_parse_readelf_line_with_setup( void** state );
+void test_parse_readelf_line_with_teardown( void** state );
 void test_parse_readelf_line_func_setup( void** state );
 void test_parse_readelf_line_func_teardown( void** state );
 void test_parse_readelf_line_func_other( void** state );
@@ -55,8 +57,8 @@ const struct CMUnitTest all_tests[] =
     cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_test, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_case, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_test, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_func_setup, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_func_teardown, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_setup, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_teardown, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_func_other, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_symbol_not_func, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_object_file_name, readelf_setup, readelf_teardown ),

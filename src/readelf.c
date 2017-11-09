@@ -147,7 +147,7 @@ int parse_readelf_line( void** ptobj, const char* line_readelf )
         {
             char* save = NULL;
             char* symbol = NULL;
-            if( strtok_r( c, delim, &save ) &&                 // Entry number
+            if( strtok_r( c, delim, &save ) &&                     // Entry number
                     strtok_r( NULL, delim, &save ) &&              // Value
                     strtok_r( NULL, delim, &save ) &&              // Size
                     strtok_r( NULL, delim, &save ) &&              // Type
@@ -159,6 +159,10 @@ int parse_readelf_line( void** ptobj, const char* line_readelf )
                 if( RESULT_PARSE_SYMBOL_SUCCESS == test_case_parse_symbol( (test_case**)ptobj, symbol ) )
                 {
                     r = RESULT_PARSE_READELF_LINE_SUCCESS_TEST_CASE;
+                }
+                else if( RESULT_PARSE_SYMBOL_SUCCESS == test_fixture_parse_symbol( (test_fixture**)ptobj, symbol ) )
+                {
+                    r = RESULT_PARSE_READELF_LINE_SUCCESS_FIXTURE;
                 }
                 else
                 {
