@@ -7,7 +7,7 @@ static test_case* tc = NULL;
 
 int readelf_setup( void** state )
 {
-    tc = test_case_alloc();
+    tc = NULL;
     return 0;
 }
 
@@ -32,19 +32,11 @@ void assert_test_case_equal(
 }
 
 
-void assert_test_case_empty( const test_case* tc )
-{
-    assert_null( test_case_get_test( tc ) );
-    assert_null( test_case_get_case( tc ) );
-    assert_null( test_case_get_fn( tc ) );
-}
-
-
 void test_test_case_parse_symbol_valid_test( void** state )
 {
     assert_int_equal(
             RESULT_PARSE_SYMBOL_SUCCESS,
-            test_case_parse_symbol( tc, "test_cmocka__NAME_TEST__dummy_case" )
+            test_case_parse_symbol( &tc, "test_cmocka__NAME_TEST__dummy_case" )
             );
     assert_test_case_equal( "NAME_TEST", "dummy_case", "test_cmocka__NAME_TEST__dummy_case", tc );
 }
@@ -54,9 +46,9 @@ void test_test_case_parse_symbol_bad_test_case_sep( void** state )
 {
     assert_int_equal(
             RESULT_PARSE_SYMBOL_FAILURE,
-            test_case_parse_symbol( tc, "test_cmocka__asdf_qwerty" )
+            test_case_parse_symbol( &tc, "test_cmocka__asdf_qwerty" )
             );
-    assert_test_case_empty( tc );
+    assert_null( tc );
 }
 
 
@@ -64,9 +56,9 @@ void test_test_case_parse_symbol_bad_prefix_sep( void** state )
 {
     assert_int_equal(
             RESULT_PARSE_SYMBOL_FAILURE,
-            test_case_parse_symbol( tc, "test_cmocka_asdf__qwerty" )
+            test_case_parse_symbol( &tc, "test_cmocka_asdf__qwerty" )
             );
-    assert_test_case_empty( tc );
+    assert_null( tc );
 }
 
 
@@ -74,20 +66,20 @@ void test_test_case_parse_symbol_other( void** state )
 {
     assert_int_equal(
             RESULT_PARSE_SYMBOL_FAILURE,
-            test_case_parse_symbol( tc, "__whatever" )
+            test_case_parse_symbol( &tc, "__whatever" )
             );
-    assert_test_case_empty( tc );
+    assert_null( tc );
 }
 
 
 void test_parse_readelf_line_with_test( void** state )
 {
-    assert_return_code(
+    assert_int_equal(
+            RESULT_PARSE_READELF_LINE_SUCCESS_TEST_CASE,
             parse_readelf_line(
-                tc,
+                (void**)&tc,
                 "    3: 0000000000000000    17 FUNC    GLOBAL DEFAULT    1 test_cmocka__NAME__dummy\n"
-                ),
-            0
+                )
             );
     assert_test_case_equal( "NAME", "dummy", "test_cmocka__NAME__dummy", tc );
 }
@@ -95,8 +87,11 @@ void test_parse_readelf_line_with_test( void** state )
 
 void check_parse_failure( const char* readelf_line )
 {
-    assert_return_code( parse_readelf_line( tc, readelf_line ), 0 );
-    assert_test_case_empty( tc );
+    assert_int_equal(
+            RESULT_PARSE_READELF_LINE_FAILURE,
+            parse_readelf_line( (void**)&tc, readelf_line )
+            );
+    assert_null( tc );
 }
 
 
