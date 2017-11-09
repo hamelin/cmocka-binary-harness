@@ -20,19 +20,30 @@ void test_case_free( test_case** tc );
 #define test_case_set_case( tc, c )   field_set_string( &(tc)->_case, (c) )
 #define test_case_set_fn( tc, fn )    field_set_string( &(tc)->_fn, (fn) )
 
+typedef enum fixture_type
+{
+    FIXTURE_NIL = 0,
+    FIXTURE_SETUP,
+    FIXTURE_TEARDOWN
+} fixture_type;
+
 typedef struct _test_fixture
 {
     char* _test;
-    int _fixture;
+    fixture_type _type;
     char* _fn;
 } test_fixture;
 
-#define FIXTURE_NIL       0
-#define FIXTURE_SETUP     1
-#define FIXTURE_TEARDOWN  2
-
 #define TEST_FIXTURE(test, fixture, fn)    { (test), (fixture), (fn) }
 #define TEST_FIXTURE_NIL                   { NULL, FIXTURE_NIL, NULL }
+test_fixture* test_fixture_alloc();
+void test_fixture_free( test_fixture** tf );
+#define test_fixture_get_test( tf )      (tf)->_test
+#define test_fixture_get_type( tf )      (tf)->_type
+#define test_fixture_get_fn( tf )        (tf)->_fn
+#define test_fixture_set_test( tf, t )   field_set_string( &(tf)->_test, (t) )
+#define test_fixture_set_type( tf, t )   (tf)->_type = (t)
+#define test_fixture_set_fn( tf, fn )    field_set_string( &(tf)->_fn, (fn) )
 
 #define RESULT_PARSE_SYMBOL_SUCCESS    0
 #define RESULT_PARSE_SYMBOL_FAILURE    1

@@ -26,6 +26,10 @@ void test_parse_readelf_line_object_file_name( void** state );
 void test_parse_readelf_line_empty_line( void** state );
 void test_parse_readelf_line_heading( void** state );
 void test_parse_readelf_line_symbol_table_summary( void** state );
+void test_fixture_parse_symbol_has_setup( void** state );
+void test_fixture_parse_symbol_has_teardown( void** state );
+void test_fixture_parse_symbol_bad_sep( void** state );
+void test_fixture_parse_symbol_other( void** state );
 
 const struct CMUnitTest all_tests[] =
 {
@@ -52,5 +56,9 @@ const struct CMUnitTest all_tests[] =
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_empty_line, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_heading, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_parse_readelf_line_symbol_table_summary, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_has_setup, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_has_teardown, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_bad_sep, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_other, readelf_setup, readelf_teardown ),
 };
 const int num_tests = sizeof( all_tests ) / sizeof( all_tests[ 0 ] );

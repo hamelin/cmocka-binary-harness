@@ -3,11 +3,13 @@
 
 
 static test_case* tc = NULL;
+static test_fixture* tf = NULL;
 
 
 int readelf_setup( void** state )
 {
     tc = NULL;
+    tf = NULL;
     return 0;
 }
 
@@ -15,6 +17,7 @@ int readelf_setup( void** state )
 int readelf_teardown( void** state )
 {
     test_case_free( &tc );
+    test_fixture_free( &tf );
     return 0;
 }
 
@@ -160,4 +163,57 @@ void test_parse_readelf_line_symbol_table_summary( void** state )
     check_parse_failure(
             "Symbol table '.symtab' contains 47 entries:\n"
             );
+}
+
+
+void check_test_fixture( const char* t, fixture_type ft, const char* f )
+{
+    assert_string_equal( t, test_fixture_get_test( tf ) );
+    assert_int_equal( ft, test_fixture_get_type( tf ) );
+    assert_string_equal( f, test_fixture_get_fn( tf ) );
+}
+
+
+void test_fixture_parse_symbol_has_setup( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_SUCCESS,
+            test_fixture_parse_symbol( &tf, "setup_cmocka__TEST_NAME" )
+            );
+    check_test_fixture( "TEST_NAME", FIXTURE_SETUP, "setup_cmocka__TEST_NAME" );
+}
+
+
+void test_fixture_parse_symbol_has_teardown( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_SUCCESS,
+            test_fixture_parse_symbol( &tf, "teardown_cmocka___thisTestInstead" )
+            );
+    check_test_fixture( "_thisTestInstead", FIXTURE_TEARDOWN, "teardown_cmocka___thisTestInstead" );
+}
+
+
+void test_fixture_parse_symbol_bad_sep( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_FAILURE,
+            test_fixture_parse_symbol( &tf, "setup_cmocka_TEST" )
+            );
+    assert_null( tf );
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_FAILURE,
+            test_fixture_parse_symbol( &tf, "teardown_cmockaTEST" )
+            );
+    assert_null( tf );
+}
+
+
+void test_fixture_parse_symbol_other( void** state )
+{
+    assert_int_equal(
+            RESULT_PARSE_SYMBOL_FAILURE,
+            test_fixture_parse_symbol( &tf, "__whatever" )
+            );
+    assert_null( tf );
 }

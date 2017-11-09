@@ -56,6 +56,73 @@ int test_case_parse_symbol( test_case** ptc, const char* symbol )
 }
 
 
+test_fixture* test_fixture_alloc()
+{
+    test_fixture nil = TEST_FIXTURE_NIL;
+    test_fixture* tf = calloc( 1, sizeof( test_fixture ) );
+    memcpy( tf, &nil, sizeof( test_fixture ) );
+    return tf;
+}
+
+
+void test_fixture_free( test_fixture** ptf )
+{
+    if( *ptf )
+    {
+        field_free( &(*ptf)->_test );
+        field_free( &(*ptf)->_fn );
+        free( *ptf );
+        *ptf = NULL;
+    }
+}
+
+
+int test_fixture_parse_symbol( test_fixture** ptf, const char* symbol )
+{
+    const char* marker = "_cmocka__";
+    const char* pos_marker = strstr( symbol, marker );
+    int r = RESULT_PARSE_SYMBOL_ERROR;
+    if( pos_marker )
+    {
+        fixture_type ftype = FIXTURE_NIL;
+        if( !strncmp( symbol, "setup", pos_marker - symbol ) )
+        {
+            ftype = FIXTURE_SETUP;
+        }
+        else if( !strncmp( symbol, "teardown", pos_marker - symbol ) )
+        {
+            ftype = FIXTURE_TEARDOWN;
+        }
+
+        if( ftype != FIXTURE_NIL )
+        {
+            const char* testname = pos_marker + strlen( marker );
+            if( testname[ 0 ] )
+            {
+                *ptf = test_fixture_alloc();
+                test_fixture_set_test( *ptf, testname );
+                test_fixture_set_type( *ptf, ftype );
+                test_fixture_set_fn( *ptf, symbol );
+                r = RESULT_PARSE_SYMBOL_SUCCESS;
+            }
+            else
+            {
+                r = RESULT_PARSE_SYMBOL_FAILURE;
+            }
+        }
+        else
+        {
+            r = RESULT_PARSE_SYMBOL_FAILURE;
+        }
+    }
+    else
+    {
+        r = RESULT_PARSE_SYMBOL_FAILURE;
+    }
+    return r;
+}
+
+
 int parse_readelf_line( void** ptobj, const char* line_readelf )
 {
     int r = RESULT_PARSE_READELF_LINE_ERROR;
