@@ -50,6 +50,19 @@ buildconfig:
 clean:
 	rm -rf $(DIR_BASE)
 
+.PHONY: test
+test:
+	$(MAKE) testconfig CONFIG=debug
+
+.PHONY: testconfig
+testconfig: buildconfig
+	./$(call IN_BUILD,$(call AS_EXEC,runtests))
+
+.PHONY: testall
+testall:
+	$(MAKE) testconfig CONFIG=debug
+	$(MAKE) testconfig CONFIG=release
+
 
 $(LIBCMOCKA_ELF): $(OBJECTS)
 	$(AR) cr $@ $?
