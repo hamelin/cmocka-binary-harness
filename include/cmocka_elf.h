@@ -1,29 +1,17 @@
 #ifndef INC_CTEST_H
 #define INC_CTEST_H
 
+#ifndef TEST_NAME
+#error "Macro TEST_NAME not set prior to writing up the unit tests. Set this to the name of the unit test module."
+#endif
+
 #include <stdlib.h>
 
+#define SETUP()     void setup_cmocka__##TEST_NAME( void* state )
+#define TEARDOWN()  void teardown_cmocka__##TEST_NAME( void* state )
+#define TEST(name)  void test_cmocka__##TEST_NAME##__##name( void* state )
 
-typedef void (*setup_fn)();
-typedef void (*teardown_fn)();
-typedef void (*ctest_fn)();
-typedef struct _named_test
-{
-    const char* name;
-    ctest_fn test;
-} ctest;
-
-
-typedef struct _failure
-{
-    const char* file;
-    unsigned int line;
-} failure;
-extern failure the_failure;
-
-
-void _fail( const char* file, int line );
-#define fail()  _fail( __FILE__, __LINE__ )
+extern void* ptr_freed_last;
 
 
 #endif  // INC_CTEST_H

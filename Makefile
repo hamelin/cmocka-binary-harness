@@ -1,5 +1,5 @@
 CC = gcc -c -x c
-CFLAGS = -std=c11 -Wall -Werror -Iinclude -include header.h
+CFLAGS = -std=gnu11 -Wall -Werror -Iinclude -Isrc -include header.h
 LD = gcc -static
 LDFLAGS =
 LIBS = -lm
@@ -68,8 +68,11 @@ ifdef DO_STRIP
 endif
 
 $(call IN_BUILD,$(call AS_EXEC,runtests)): $(LIBTEST)
-$(call IN_BUILD,$(call AS_EXEC,runtests)): LIBS := $(LIBTEST) -lcmocka $(LIBS)
+$(call IN_BUILD,$(call AS_EXEC,runtests)): LIBS := $(LIBTEST) $(LIBCMOCKA_ELF) -lcmocka $(LIBS)
+$(call IN_BUILD,$(call AS_EXEC,runtests)): LDFLAGS += -Wl,--wrap=free
 
 $(call AS_OBJ,%): $(call AS_SRC,%) $(HEADERS)
 	$(CC) -o $@ $(CFLAGS) $<
+
+$(call AS_OBJ,$(call AS_TEST,%)): CFLAGS += -include src/test/header.h -DTEST_NAME
 
