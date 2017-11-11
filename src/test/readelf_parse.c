@@ -2,7 +2,7 @@ static test_case* tc = NULL;
 static test_fixture* tf = NULL;
 
 
-int readelf_parse_setup( void** state )
+int readelf_setup( void** state )
 {
     tc = NULL;
     tf = NULL;
@@ -10,7 +10,7 @@ int readelf_parse_setup( void** state )
 }
 
 
-int readelf_parse_teardown( void** state )
+int readelf_teardown( void** state )
 {
     test_case_free( &tc );
     test_fixture_free( &tf );

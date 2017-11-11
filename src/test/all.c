@@ -17,8 +17,8 @@ void test_list_push_iter( void** state );
 void test_list_lookup_present( void** state );
 void test_list_lookup_absent( void** state );
 
-int readelf_setup( void** state );
-int readelf_teardown( void** state );
+int readelf_parse_setup( void** state );
+int readelf_parse_teardown( void** state );
 void test_test_case_parse_symbol_valid_test( void** state );
 void test_test_case_parse_symbol_bad_test_case_sep( void** state );
 void test_test_case_parse_symbol_bad_prefix_sep( void** state );
@@ -58,26 +58,26 @@ const struct CMUnitTest all_tests[] =
     cmocka_unit_test_setup_teardown( test_list_push_iter, list_setup, list_teardown ),
     cmocka_unit_test_setup_teardown( test_list_lookup_present, list_setup, list_teardown ),
     cmocka_unit_test_setup_teardown( test_list_lookup_absent, list_setup, list_teardown ),
-    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_valid_test, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_bad_test_case_sep, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_bad_prefix_sep, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_other, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_test_case, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_test, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_case, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_test, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_setup, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_teardown, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_func_other, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_symbol_not_func, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_object_file_name, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_empty_line, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_heading, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_parse_readelf_line_symbol_table_summary, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_has_setup, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_has_teardown, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_bad_sep, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_other, readelf_setup, readelf_teardown ),
-    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_no_test, readelf_setup, readelf_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_valid_test, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_bad_test_case_sep, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_bad_prefix_sep, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_other, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_test_case, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_test, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_no_case, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_test, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_setup, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_with_teardown, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_func_other, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_symbol_not_func, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_object_file_name, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_empty_line, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_heading, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_parse_readelf_line_symbol_table_summary, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_has_setup, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_has_teardown, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_bad_sep, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_other, readelf_parse_setup, readelf_parse_teardown ),
+    cmocka_unit_test_setup_teardown( test_fixture_parse_symbol_no_test, readelf_parse_setup, readelf_parse_teardown ),
 };
 const int num_tests = sizeof( all_tests ) / sizeof( all_tests[ 0 ] );
