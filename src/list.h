@@ -18,7 +18,7 @@ void list_node_free( list_node** pn );
 
 typedef void (*fn_list_free_node_content)( void** p );
 void free_malloc( void** p );
-typedef bool (*fn_match_node_content)( const void* ref, const void* obj );
+typedef bool (*fn_match_node_content)( void* ref, const void* obj );
 
 
 typedef struct _list
@@ -31,7 +31,7 @@ list* list_alloc();
 void list_free( list** pll );
 list* list_init( list* ll, fn_list_free_node_content ff );
 void list_push( list* ll, void* obj );
-const void* list_lookup( list* ll, fn_match_node_content is_match, const void* obj );
+void* list_lookup( list* ll, fn_match_node_content is_match, const void* obj );
 #define as_obj( num )          ( (const void*)( num ) )
 #define list_make_iter( ll )   (ll)->head
 

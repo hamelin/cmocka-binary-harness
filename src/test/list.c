@@ -41,13 +41,13 @@ void free_stuff( stuff** ps )
 }
 
 
-bool stuff_match_str( const void* vs, const void* vstr )
+bool stuff_match_str( void* vs, const void* vstr )
 {
     return !strcmp( ((const stuff*)vs)->str, (const char*)vstr );
 }
 
 
-bool stuff_match_num( const void* vs, const void* vnum )
+bool stuff_match_num( void* vs, const void* vnum )
 {
     return ((const stuff*)vs)->num == (long long)vnum;
 }

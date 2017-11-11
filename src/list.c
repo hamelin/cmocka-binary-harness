@@ -67,13 +67,13 @@ void list_push( list* ll, void* obj )
 }
 
 
-const void* list_lookup( list* ll, fn_match_node_content is_match, const void* obj )
+void* list_lookup( list* ll, fn_match_node_content is_match, const void* obj )
 {
     list_iter* iter;
-    const void* match = NULL;
+    void* match = NULL;
     for( iter = list_make_iter( ll ); !list_iter_is_at_end( iter ); list_iter_next( iter ) )
     {
-        const void* cur = list_iter_get( iter );
+        void* cur = list_iter_get( iter );
         if( is_match( cur, obj ) )
         {
             match = cur;
