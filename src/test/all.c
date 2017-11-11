@@ -11,6 +11,12 @@ void utils_test_skip_blank_someblank( void** state );
 void utils_test_skip_blank_nononblank( void** state );
 void utils_test_skip_blank_empty( void** state );
 
+int list_setup( void** state );
+int list_teardown( void** state );
+void test_list_push_iter( void** state );
+void test_list_lookup_present( void** state );
+void test_list_lookup_absent( void** state );
+
 int readelf_setup( void** state );
 int readelf_teardown( void** state );
 void test_test_case_parse_symbol_valid_test( void** state );
@@ -49,6 +55,9 @@ const struct CMUnitTest all_tests[] =
     cmocka_unit_test( utils_test_skip_blank_someblank ),
     cmocka_unit_test( utils_test_skip_blank_nononblank ),
     cmocka_unit_test( utils_test_skip_blank_empty ),
+    cmocka_unit_test_setup_teardown( test_list_push_iter, list_setup, list_teardown ),
+    cmocka_unit_test_setup_teardown( test_list_lookup_present, list_setup, list_teardown ),
+    cmocka_unit_test_setup_teardown( test_list_lookup_absent, list_setup, list_teardown ),
     cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_valid_test, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_bad_test_case_sep, readelf_setup, readelf_teardown ),
     cmocka_unit_test_setup_teardown( test_test_case_parse_symbol_bad_prefix_sep, readelf_setup, readelf_teardown ),

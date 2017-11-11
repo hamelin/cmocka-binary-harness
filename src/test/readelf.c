@@ -1,7 +1,3 @@
-#include <signal.h>
-#include "readelf.h"
-
-
 static test_case* tc = NULL;
 static test_fixture* tf = NULL;
 
@@ -272,3 +268,5 @@ void test_fixture_parse_symbol_no_test( void** state )
             );
     assert_null( tf );
 }
+
+
