@@ -12,6 +12,7 @@ typedef struct _test_case
 #define TEST_CASE( name_test, name_case, name_fn )   { (name_test), (name_case), (name_fn) }
 #define TEST_CASE_NIL                                TEST_CASE( NULL, NULL, NULL )
 test_case* test_case_alloc();
+test_case* test_case_copy( test_case* tc, const test_case* src );
 void test_case_free( test_case** tc );
 #define test_case_get_test( tc )      (tc)->_test
 #define test_case_get_case( tc )      (tc)->_case
@@ -36,7 +37,10 @@ typedef struct _test_fixture
 
 #define TEST_FIXTURE(test, fixture, fn)    { (test), (fixture), (fn) }
 #define TEST_FIXTURE_NIL                   { NULL, FIXTURE_NIL, NULL }
+#define TEST_FIXTURE_SETUP(test, fn)       { (test), FIXTURE_SETUP, (fn) }
+#define TEST_FIXTURE_TEARDOWN(test, fn)    { (test), FIXTURE_TEARDOWN, (fn) }
 test_fixture* test_fixture_alloc();
+test_fixture* test_fixture_copy( test_fixture* tf, const test_fixture* src );
 void test_fixture_free( test_fixture** tf );
 #define test_fixture_get_test( tf )      (tf)->_test
 #define test_fixture_get_type( tf )      (tf)->_type
